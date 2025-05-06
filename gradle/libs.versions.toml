@@ -15,6 +15,7 @@ room = "2.6.1"
 coil = "2.5.0"
 androidxHiltNavigationCompose = "1.1.0"
 gsonConverter = "2.9.0"
+composeNavigation = "2.8.0-alpha08"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,7 +45,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 coil-core = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-core-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 
 
 [plugins]
