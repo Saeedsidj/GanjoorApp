@@ -83,4 +83,5 @@ dependencies {
     implementation(libs.room.ktx)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.navigation.compose)
+    implementation(libs.logging.interceptor)
 }
