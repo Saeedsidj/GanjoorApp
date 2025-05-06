@@ -2,13 +2,20 @@ package com.saeedev.ganjoor.ir.presentation.poetsList
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,6 +38,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.saeedev.ganjoor.ir.R
 import com.saeedev.ganjoor.ir.common.Constants
+import com.saeedev.ganjoor.ir.domain.model.Poet
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,21 +59,90 @@ fun PoetsListScreen(
                 }
             )
         }
-    ) { pading ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(pading)
-                .background(Color.White)
+    ) { padding ->
+        when (uiState) {
+            UiState.Loading -> {
+                LoadingScreen(padding)
+            }
+
+            is UiState.Success -> {
+                PoetListScreen(
+                    modifier = Modifier.padding(padding),
+                    poetList = (uiState as UiState.Success).poetsList
+                )
+            }
+
+            UiState.Failure -> {
+                FailureScreen(padding, viewModel)
+            }
+        }
+    }
+
+}
+
+@Composable
+private fun LoadingScreen(padding: PaddingValues) {
+    Box(
+        modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.align(Alignment.Center),
+            color = Color(255, 246, 247)
+        )
+    }
+}
+
+@Composable
+private fun FailureScreen(
+    padding: PaddingValues,
+    viewModel: PoetsListViewModel
+) {
+    Box(
+        modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(uiState) {
-                PoetCard(
-                    imgUrl = it.imgUrl,
-                    name = it.name
+            Text(
+                text = stringResource(R.string.error),
+                color = Color.Black
+            )
+            Button(
+                onClick = viewModel::initialUiState
+            ) {
+                Text(
+                    text = stringResource(R.string.retry),
                 )
             }
         }
     }
 }
+
+@Composable
+fun PoetListScreen(
+    modifier: Modifier,
+    poetList: List<Poet>
+) {
+    LazyColumn(
+        modifier = modifier
+            .background(Color.White)
+    ) {
+        items(poetList) {
+            PoetCard(
+                imgUrl = it.imgUrl,
+                name = it.name
+            )
+        }
+    }
+
+}
+
 
 @Composable
 fun PoetCard(
