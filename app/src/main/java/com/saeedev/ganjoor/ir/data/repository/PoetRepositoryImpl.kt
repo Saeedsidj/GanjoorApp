@@ -1,6 +1,5 @@
 package com.saeedev.ganjoor.ir.data.repository
 
-import android.util.Log
 import com.saeedev.ganjoor.ir.data.local.dataSource.LocalDataSource
 import com.saeedev.ganjoor.ir.data.local.entity.PoetEntity
 import com.saeedev.ganjoor.ir.data.network.dataSource.NetworkDataSource
@@ -18,7 +17,7 @@ class PoetRepositoryImpl @Inject constructor(
     override suspend fun getAllPoets(): Flow<List<Poet>> {
         val poets = api.getPoets()
         db.upsertPoets(poets.map { it.toEntity() })
-        return db.getAllPoets().map { it.map { it.toDomainModel() } }
+        return db.getAllPoets().map { it.map(PoetEntity::toDomainModel) }
     }
 
 }
